@@ -1,6 +1,10 @@
-img = "";
 status = "";
 objects = [];
+song = "";
+
+function preload() {
+   song = loadSound("sound.mp3");
+}
 
 function setup() {
     canvas = createCanvas(380, 380);
@@ -8,21 +12,13 @@ function setup() {
     video = createCapture(VIDEO);
     video.size(380,380);
     video.hide();
-}
-
-function start(){
     objectDetector = ml5.objectDetector('cocossd', modelLoaded);
     document.getElementById("status").innerHTML = "Status : Detecting Objects";
-}
-
-function preload() {
-    img = loadImage('dog_cat.jpg');
 }
 
 function modelLoaded() {
     console.log("Model Loaded!");
     status = true;
-    objectDetector.detect(video, gotResult);
 }
 
 function gotResult(error, results) {
@@ -52,14 +48,18 @@ function draw() {
             noFill();
             stroke(r,g,b);
             rect(objects[i].x, objects[i].y, objects[i].width, objects[i].height);
+
+            if(objects[i].label == "person")
+             { document.getElementById("number_of_objects").innerHTML = "Baby Found"; 
+             console.log("stop"); 
+             song.stop();
+             } else { document.getElementById("number_of_objects").innerHTML = "Baby Not Found"; 
+             console.log("play"); 
+             song.play(); 
+            } } if(objects.length == 0) 
+            { document.getElementById("number_of_objects").innerHTML = "Baby Not Found"; 
+            console.log("play");
+
         }
-       else(status! = "")
-       r = random(255);
-       g = random(255);
-       b = random(255);
-       objectDetector.detect(video, gotResult);
-       for (i = 0; i < objects.length; i++)
-       {
-           document.getElementById("status").innerHTML = "Status : Baby not detected";
-       }
+    } 
 }
